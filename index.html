@@ -1,0 +1,2127 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Arena Hub — Sovereign Educational Infrastructure Constitution — Peer Review Portal">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Constitution Interrogation Portal — Arena Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── DESIGN TOKENS ─────────────────────────────────────── */
+    :root {
+      --bg-base:       #07070f;
+      --bg-surface:    #0c0c18;
+      --bg-elevated:   #121220;
+      --bg-hover:      #161628;
+      --border-dim:    #16162a;
+      --border-mid:    #22223a;
+      --border-bright: #2e2e52;
+      --accent:        #5b6cf9;
+      --accent-hi:     #7480ff;
+      --accent-glow:   rgba(91,108,249,0.12);
+      --text-hi:       #eaedf5;
+      --text-mid:      #9499b8;
+      --text-lo:       #3e4060;
+      --verdict-clear:      #22c55e;
+      --verdict-loophole:   #f59e0b;
+      --verdict-restrictive:#ef4444;
+      --verdict-ambiguous:  #a78bfa;
+      --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --radius: 3px;
+      --panel-w: 380px;
+      --header-h: 60px;
+    }
+
+    /* ── RESET ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-base);
+      color: var(--text-hi);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font-family: inherit; cursor: pointer; }
+    textarea { font-family: inherit; }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+
+    /* ── HEADER ────────────────────────────────────────────── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: rgba(7,7,15,0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .header-wordmark {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .header-sep {
+      width: 1px;
+      height: 18px;
+      background: var(--border-mid);
+    }
+    .header-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-mid);
+      letter-spacing: 0.06em;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .reviewer-chip {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius);
+      color: var(--text-mid);
+    }
+    .reviewer-chip em {
+      font-style: normal;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .header-progress {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-lo);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── WORKSPACE ─────────────────────────────────────────── */
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr var(--panel-w);
+      min-height: calc(100vh - var(--header-h));
+    }
+
+    /* ── CONSTITUTION COLUMN ───────────────────────────────── */
+    .constitution-col {
+      border-right: 1px solid var(--border-dim);
+      overflow-y: auto;
+      padding: 52px 60px 140px;
+    }
+    .doc-masthead {
+      margin-bottom: 52px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .doc-status-pill {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(91,108,249,0.35);
+      border-radius: 2px;
+      padding: 3px 8px;
+      margin-bottom: 18px;
+    }
+    .doc-title {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-hi);
+      line-height: 1.25;
+      letter-spacing: 0.02em;
+      margin-bottom: 10px;
+    }
+    .doc-subtitle {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-mid);
+      letter-spacing: 0.06em;
+      line-height: 1.5;
+    }
+    .doc-ref {
+      margin-top: 14px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-lo);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── ARTICLE BLOCKS ────────────────────────────────────── */
+    .article-block {
+      margin-bottom: 56px;
+    }
+    .article-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .article-tag {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .article-name {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-hi);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SECTION CARDS ─────────────────────────────────────── */
+    .section-card {
+      margin-bottom: 14px;
+      padding: 20px 22px;
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: border-color 0.12s ease, background 0.12s ease;
+      position: relative;
+    }
+    .section-card:hover {
+      border-color: var(--border-mid);
+      background: rgba(22,22,40,0.5);
+    }
+    .section-card.is-active {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+    /* Verdict colour bar */
+    .section-card.has-verdict::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      border-radius: var(--radius) 0 0 var(--radius);
+    }
+    .section-card.v-clear::before       { background: var(--verdict-clear); }
+    .section-card.v-loophole::before    { background: var(--verdict-loophole); }
+    .section-card.v-restrictive::before { background: var(--verdict-restrictive); }
+    .section-card.v-ambiguous::before   { background: var(--verdict-ambiguous); }
+
+    .section-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .section-id {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      color: var(--text-lo);
+    }
+    .section-title-text {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-mid);
+      letter-spacing: 0.04em;
+    }
+    .verdict-badge {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 2px;
+      border: 1px solid;
+    }
+    .vb-clear       { color: var(--verdict-clear);       border-color: rgba(34,197,94,0.3);   background: rgba(34,197,94,0.07); }
+    .vb-loophole    { color: var(--verdict-loophole);    border-color: rgba(245,158,11,0.3);  background: rgba(245,158,11,0.07); }
+    .vb-restrictive { color: var(--verdict-restrictive); border-color: rgba(239,68,68,0.3);   background: rgba(239,68,68,0.07); }
+    .vb-ambiguous   { color: var(--verdict-ambiguous);   border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.07); }
+
+    .section-body-text {
+      font-size: 13.5px;
+      line-height: 1.75;
+      color: var(--text-hi);
+    }
+    .section-body-text p { margin-bottom: 10px; }
+    .section-body-text p:last-child { margin-bottom: 0; }
+    .section-body-text .sub-heading {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-mid);
+      margin: 14px 0 6px;
+      letter-spacing: 0.04em;
+    }
+    .section-body-text .gap-note {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--verdict-loophole);
+      border: 1px dashed rgba(245,158,11,0.4);
+      border-radius: 2px;
+      padding: 8px 12px;
+      background: rgba(245,158,11,0.04);
+    }
+    /* ── SECTION DATA TABLES ───────────────────────────────── */
+    .section-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 12.5px;
+    }
+    .section-table th {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-lo);
+      text-align: left;
+      padding: 7px 10px;
+      border-bottom: 1px solid var(--border-mid);
+      background: var(--bg-elevated);
+    }
+    .section-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border-dim);
+      vertical-align: top;
+      line-height: 1.6;
+      color: var(--text-hi);
+    }
+    .section-table td:first-child {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-mid);
+      padding-right: 16px;
+      min-width: 140px;
+    }
+    .section-table tr:last-child td { border-bottom: none; }
+
+    /* ── REVIEW PANEL ──────────────────────────────────────── */
+    .review-panel {
+      position: sticky;
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      background: var(--bg-surface);
+      padding: 22px 20px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Panel card */
+    .panel-card {
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .panel-card-header {
+      padding: 8px 12px;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border-dim);
+      font-family: var(--font-mono);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-lo);
+    }
+    .panel-card-body {
+      padding: 12px 14px;
+    }
+
+    /* Active clause display */
+    .active-clause-id {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 3px;
+    }
+    .active-clause-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-mid);
+      line-height: 1.4;
+    }
+
+    /* Verdict grid */
+    .verdict-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+    }
+    .verdict-btn {
+      padding: 9px 6px;
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text-mid);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-align: center;
+      transition: all 0.1s ease;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .verdict-btn:hover { color: var(--text-hi); border-color: var(--border-bright); }
+    .verdict-btn.is-active { font-weight: 700; }
+    .verdict-btn[data-v="clear"].is-active       { color: var(--verdict-clear);       border-color: var(--verdict-clear);       background: rgba(34,197,94,0.08); }
+    .verdict-btn[data-v="loophole"].is-active    { color: var(--verdict-loophole);    border-color: var(--verdict-loophole);    background: rgba(245,158,11,0.08); }
+    .verdict-btn[data-v="restrictive"].is-active { color: var(--verdict-restrictive); border-color: var(--verdict-restrictive); background: rgba(239,68,68,0.08); }
+    .verdict-btn[data-v="ambiguous"].is-active   { color: var(--verdict-ambiguous);   border-color: var(--verdict-ambiguous);   background: rgba(167,139,250,0.08); }
+
+    /* Annotation */
+    .annotation-box {
+      width: 100%;
+      min-height: 108px;
+      background: var(--bg-base);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius);
+      color: var(--text-hi);
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      line-height: 1.65;
+      padding: 10px 12px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.12s;
+    }
+    .annotation-box:focus { border-color: var(--border-bright); }
+    .annotation-box::placeholder { color: var(--text-lo); }
+
+    .annotation-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 7px;
+      gap: 8px;
+    }
+    .autosave-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-lo);
+    }
+    .autosave-label.is-saving { color: var(--accent); }
+    .autosave-label.is-saved  { color: var(--verdict-clear); }
+
+    /* Record button */
+    .record-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text-mid);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: all 0.12s;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .record-btn:hover { border-color: var(--text-mid); color: var(--text-hi); }
+    .record-btn.is-recording {
+      border-color: var(--verdict-restrictive);
+      color: var(--verdict-restrictive);
+      background: rgba(239,68,68,0.07);
+      animation: pulse-ring 1.6s infinite;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.35); }
+      50%       { box-shadow: 0 0 0 5px rgba(239,68,68,0); }
+    }
+    .rec-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .is-recording .rec-dot { animation: blink-dot 0.9s infinite; }
+    @keyframes blink-dot {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.1; }
+    }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      padding: 11px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      transition: background 0.12s, opacity 0.12s;
+      margin-top: 10px;
+    }
+    .submit-btn:hover:not(:disabled) { background: var(--accent-hi); }
+    .submit-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* Progress list */
+    .progress-rows { display: flex; flex-direction: column; gap: 2px; }
+    .prog-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .prog-row:last-child { border-bottom: none; }
+    .prog-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-lo);
+      width: 68px;
+      flex-shrink: 0;
+    }
+    .prog-track {
+      flex: 1;
+      height: 2px;
+      background: var(--border-dim);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+    .prog-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 1px;
+      transition: width 0.3s ease;
+    }
+    .prog-count {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-lo);
+      width: 26px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* Export button */
+    .export-btn {
+      width: 100%;
+      padding: 9px;
+      background: transparent;
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius);
+      color: var(--text-mid);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      transition: all 0.12s;
+    }
+    .export-btn:hover { border-color: var(--text-mid); color: var(--text-hi); }
+
+    /* ── TOAST ─────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius);
+      padding: 10px 18px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-hi);
+      letter-spacing: 0.04em;
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 1000;
+      pointer-events: none;
+      white-space: nowrap;
+      max-width: 90vw;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── RESPONSIVE — TABLET / IPAD ────────────────────────── */
+    @media (max-width: 1100px) {
+      :root { --panel-w: 320px; }
+      .constitution-col { padding: 40px 36px 120px; }
+    }
+    @media (max-width: 800px) {
+      .workspace {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+      .constitution-col {
+        padding: 28px 20px 80px;
+        border-right: none;
+        border-bottom: 1px solid var(--border-dim);
+      }
+      .review-panel {
+        position: relative;
+        top: 0;
+        height: auto;
+        padding: 22px 20px;
+      }
+      .header-right { display: none; }
+    }
+    @media (max-width: 480px) {
+      .constitution-col { padding: 20px 16px 80px; }
+      .doc-title { font-size: 16px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ─────────────────────────────── HEADER ────────────────── -->
+<header class="site-header">
+  <div class="header-left">
+    <span class="header-wordmark">Arena Hub</span>
+    <div class="header-sep"></div>
+    <span class="header-title">Constitution Interrogation Portal</span>
+  </div>
+  <div class="header-right">
+    <div class="reviewer-chip">Reviewer: <em id="js-reviewer-name">—</em></div>
+    <div class="header-progress" id="js-header-progress">0 / 0 clauses reviewed</div>
+  </div>
+</header>
+
+<!-- ─────────────────────────────── WORKSPACE ─────────────── -->
+<main class="workspace">
+
+  <!-- LEFT: Constitution text -->
+  <div class="constitution-col" id="js-constitution-col">
+    <div class="doc-masthead">
+      <div class="doc-status-pill">Parliamentary Consultation Draft</div>
+      <div class="doc-title">THE SOVEREIGN EDUCATIONAL<br>INFRASTRUCTURE CONSTITUTION</div>
+      <div class="doc-subtitle">Master Charter — Foundational Document for Parliamentary Consultation and Expert Review</div>
+      <div class="doc-ref">REF: SEIC-PARL-2026-001 &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; May 2026 &nbsp;·&nbsp; Confidential — For Peer Review Only</div>
+    </div>
+    <div id="js-constitution-body"></div>
+  </div>
+
+  <!-- RIGHT: Review panel -->
+  <aside class="review-panel" id="js-review-panel">
+
+    <div class="panel-card">
+      <div class="panel-card-header">Active Clause</div>
+      <div class="panel-card-body">
+        <div class="active-clause-id" id="js-active-id">— Select a clause to begin —</div>
+        <div class="active-clause-title" id="js-active-title"></div>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-card-header">Structural Verdict</div>
+      <div class="panel-card-body">
+        <div class="verdict-grid">
+          <button class="verdict-btn" data-v="clear">&#10003; Clear</button>
+          <button class="verdict-btn" data-v="loophole">&#9651; Loophole</button>
+          <button class="verdict-btn" data-v="restrictive">&#10007; Too Restrictive</button>
+          <button class="verdict-btn" data-v="ambiguous">&#x7e; Ambiguous</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-card-header">Expert Annotation</div>
+      <div class="panel-card-body">
+        <textarea class="annotation-box" id="js-annotation"
+          placeholder="Enter your expert commentary for the active clause&#8230;"></textarea>
+        <div class="annotation-footer">
+          <span class="autosave-label" id="js-autosave">—</span>
+          <button class="record-btn" id="js-record-btn">
+            <div class="rec-dot"></div>
+            <span id="js-record-label">Record Note</span>
+          </button>
+        </div>
+        <button class="submit-btn" id="js-submit-btn" disabled>Submit to Ledger</button>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-card-header">Session Progress</div>
+      <div class="panel-card-body">
+        <div class="progress-rows" id="js-progress"></div>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-card-header">Export</div>
+      <div class="panel-card-body">
+        <button class="export-btn" id="js-export-btn">&#8595; Export Session as JSON</button>
+      </div>
+    </div>
+
+  </aside>
+</main>
+
+<!-- ─────────────────────────────── TOAST ─────────────────── -->
+<div class="toast" id="js-toast"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT — FULL PORTAL LOGIC
+     ═══════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ─────────────────────────────────────────────────────────────
+   CONFIGURATION — update GAS_ENDPOINT before distributing URLs
+   ───────────────────────────────────────────────────────────── */
+const CONFIG = {
+  GAS_ENDPOINT: 'https://script.google.com/macros/s/AKfycbw9BU3-oo4gpH-pMBJCMnqyHjiAeeXpeN62DGMVq7uanVD2B0MCyhPDeK8A7W2m6BeGfA/exec',
+  DOMAIN:       'thearenahub.info',
+  VERSION:      '1.0.0',
+  STORAGE_KEY:  'arena_hub_review_v1'
+};
+
+/* ─────────────────────────────────────────────────────────────
+   CONSTITUTION DATA — extracted verbatim from
+   Sovereign_Educational_Infrastructure_Constitution_v1.0.docx
+   DO NOT edit text without checking the source document.
+   DO NOT change section IDs — they key the ledger and localStorage.
+   ───────────────────────────────────────────────────────────── */
+const CONSTITUTION = [
+  {
+    id: 'PREAMBLE', article: 'PREAMBLE', title: 'Preamble',
+    sections: [
+      {
+        id: 'P.I', title: 'I. Context and Necessity',
+        paragraphs: [
+          `We stand at an inflection point in the relationship between human beings and the systems they create. Advanced artificial intelligence, adaptive algorithms, and persistent data architectures have emerged not merely as tools but as environmental forces — shaping the contexts in which learning occurs, the signals by which progress is measured, and the pathways through which young people come to understand themselves and their place in the world.`,
+          `This emergence has not been malicious. In many instances it has produced genuine benefit. But benefit achieved without constitutional constraint is benefit that depends on the continued goodwill of its architects — and constitutional frameworks do not rest on goodwill. They rest on structure, accountability, and the primacy of human dignity as a non-negotiable condition of public life.`,
+          `The United Kingdom's educational infrastructure has entered a period of acute structural fragility. The proliferation of third-party data platforms, the normalisation of algorithmic assessment, and the progressive transfer of institutional memory from human practitioners to commercial systems has created a dependency architecture that is incompatible with the forensic, clinical, and legal requirements of education — and particularly of Alternative Provision and Special Educational Needs and Disability provision, where the consequences of documentation failure are most severe and most irreversible.`,
+          `This Constitution is established in recognition of that fragility, and in affirmation of the principle that the response to systemic vulnerability is not better systems. It is better governance of systems.`
+        ]
+      },
+      {
+        id: 'P.II', title: 'II. Philosophical Foundation',
+        paragraphs: [
+          `This Constitution draws upon three pillars of established political philosophy, each of which has found expression in the United Kingdom's legal and constitutional tradition.`,
+          `The first is the principle of natural rights as articulated in the liberal tradition: that certain capacities — the capacity for autonomous thought, for self-determination, for intellectual development — are not granted by systems or institutions but are inherent to the human person. These capacities may be supported, constrained, or damaged by institutions, but they cannot be created or legitimately owned by them.`,
+          `The second is the harm principle: that the primary justification for any institutional constraint on individual freedom is the prevention of harm to others. This Constitution applies this principle in both directions — it constrains the system from harming learner autonomy, and it constrains learners' institutions from using the system to harm those in their care.`,
+          `The third is the principle of procedural justice: that the legitimacy of a system derives not only from its outcomes but from the fairness of its processes. A system that produces good outcomes through coercive or opaque means is not a just system. Transparency, accountability, and the right to challenge are not administrative features — they are constitutional requirements.`
+        ]
+      },
+      {
+        id: 'P.III', title: 'III. What This Constitution Establishes',
+        paragraphs: [
+          `This Constitution establishes a sovereign educational infrastructure in which the system exists to support the learner, and never to define them. It affirms that education must remain a domain governed not by optimisation or control, but by human agency, intellectual autonomy, and self-determined growth.`,
+          `It rejects the use of educational infrastructure as a mechanism for behavioural shaping, ideological direction, or systemic convergence toward predefined outcomes. It recognises that the rule of law, rather than policy or system design, is the legitimate source of responsibility and authority in society.`,
+          `It further establishes that all intelligence within the system — human or artificial — shall remain accountable to the preservation of human autonomy, and that no amendment to this Constitution may reduce that accountability or transfer it to a non-human actor.`,
+          `Where this Constitution operates in tension with commercial interest, institutional convenience, or technological capability, the Constitution takes precedence. This is not a statement of technological pessimism. It is a statement of constitutional priority.`
+        ]
+      },
+      {
+        id: 'P.IV', title: 'IV. How This Document Should Be Read',
+        paragraphs: [
+          `This Constitution is a living instrument in the sense that it must be interpreted in light of evolving circumstances. It is not a living instrument in the sense that its core principles may be revised by administrative convenience or judicial reinterpretation without the constitutional amendment process defined herein.`,
+          `Each Article is to be read in conjunction with every other Article. No provision operates in isolation. Where apparent conflict exists between Articles, the resolution shall favour the interpretation that best preserves learner autonomy, consistent with the rule of law.`,
+          `The Schedules appended to this Constitution are operational instruments, not constitutional principles. They may be amended through governance processes without triggering full constitutional review, provided no amendment to a Schedule reduces the protections established in the Articles.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'I', article: 'Article I', title: 'The Primacy of Human Agency',
+    sections: [
+      {
+        id: '1.1', title: '1.1 Statement of Intent',
+        paragraphs: [
+          `The principle of human agency supremacy is not a feature of this Constitution. It is its foundation. Every other provision, every governance structure, every technical constraint flows from this single assertion: the learner is sovereign over their own development.`,
+          `This principle is deliberately absolute in its constitutional statement because history consistently demonstrates that the erosion of individual agency in institutional settings proceeds not through sudden impositions but through gradual, well-intentioned accommodations. Each accommodation appears reasonable in isolation. The cumulative effect is the replacement of human self-determination with institutional prescription.`,
+          `This Article does not establish that learners are infallible. It establishes that the system has no authority to correct them. Correction, redirection, and development are legitimate — but they must originate from the learner's own will, informed by relationships with human practitioners, and never coerced by system design.`
+        ]
+      },
+      {
+        id: '1.2', title: '1.2 Practical Implications',
+        paragraphs: [
+          `In operational terms, this Article requires that all system outputs — including those generated by artificial intelligence, predictive analytics, and adaptive assessment engines — are presented exclusively as advisory information. The learner may accept, reject, reinterpret, or disregard any output without prejudice to their standing within the system.`,
+          `The system shall not assign learners to pathways, curricula, or intervention programmes on the basis of algorithmic assessment alone. Human practitioners may use system outputs to inform recommendations, but the decision to recommend — and the learner's decision to accept or decline — must remain unambiguously human.`,
+          `The system shall not implement any design mechanism that increases the cost of rejecting its outputs — whether through friction, loss of access, reduced functionality, or social pressure encoded in peer-facing interfaces. The decision to ignore the system shall carry no operational penalty.`
+        ]
+      },
+      {
+        id: '1.3', title: '1.3 Edge Case Analysis',
+        subsections: [
+          {
+            heading: '1.3.1  Safeguarding and Child Protection',
+            paragraphs: [
+              `The most significant tension in the application of this Article arises in safeguarding contexts. A learner experiencing harm may exercise their agency in ways that prevent disclosure — refusing to engage with support systems, actively concealing concern indicators, or invoking this Article's protections to resist welfare interventions.`,
+              `This tension is resolved as follows: the duty of safeguarding established in the Children Act 1989 and the statutory guidance issued under Working Together to Safeguard Children is not diminished or modified by this Constitution. Where a legally accountable human practitioner — specifically a Designated Safeguarding Lead — exercises their statutory duty of care, this does not constitute a violation of Article I. The Constitution constrains the system. It does not constrain humans exercising lawful duties.`,
+              `However, the system itself shall not initiate safeguarding escalation autonomously. It may surface signals, flag indicators, and present contextual information to the relevant human practitioner. The decision to act remains exclusively human.`
+            ]
+          },
+          {
+            heading: '1.3.2  Compulsory Education',
+            paragraphs: [
+              `The principle of human agency does not override the legal obligation to receive education established under the Education Act 1996. The Constitution does not establish a right to opt out of education. It establishes that within the context of compulsory education, the learner retains sovereignty over the form, direction, and pace of their intellectual development, within the constraints of their school's lawful curriculum obligations.`
+            ]
+          }
+        ]
+      },
+      {
+        id: '1.4', title: '1.4 Real-World Application',
+        paragraphs: [
+          `In practice, Article I manifests in the design of evidence capture systems. When a practitioner records a student's achievement, the record documents what occurred — it does not prescribe what should occur next. When an assessment engine identifies a pattern in a learner's performance, that pattern is surfaced to the practitioner and, where appropriate, the learner. Neither the practitioner nor the system may use that pattern to constrain the learner's subsequent choices without the learner's active and informed participation.`,
+          `A learner who declines to engage with a suggested qualification pathway retains full access to the system's support functions. A learner who chooses a path the system assesses as suboptimal receives the same quality of evidence recording and portfolio management as one who follows a recommended trajectory. The system serves the choice, not the optimum.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'II', article: 'Article II', title: 'The Anti-Trust Mandate',
+    sections: [
+      {
+        id: '2.1', title: '2.1 Statement of Intent',
+        paragraphs: [
+          `The Anti-Trust Mandate addresses a failure mode that is distinct from malicious design. It addresses the failure of uncritical acceptance — the gradual normalisation of system outputs as authoritative rather than advisory. This normalisation does not require any single act of deception. It requires only the consistent presence of confident-sounding outputs and the progressive erosion of the practitioner's or learner's habit of questioning them.`,
+          `'Trust', in this context, is not an emotional or relational quality. It is an epistemic posture — the degree to which an individual accepts system outputs as proxies for independent judgement. The Anti-Trust Mandate establishes that this posture must be continuously examined, and that the system must be designed to facilitate that examination rather than to discourage it.`
+        ]
+      },
+      {
+        id: '2.2', title: '2.2 Practical Implications',
+        paragraphs: [
+          `Every output produced by a system component shall include, in a format accessible to the recipient: the origin of the output (which process, model, or dataset generated it); the reasoning chain or methodology by which it was produced; a clear statement of the confidence level attached to it; and an explicit indication of the conditions under which it may be incorrect.`,
+          `The system shall not present outputs in a manner designed to reduce scrutiny — whether through authoritative framing, the suppression of uncertainty indicators, or the use of presentation conventions that imply finality. Where an output is contested by a human practitioner or learner, the system shall provide the mechanism to record and preserve that contestation as a matter of record.`,
+          `Critically, the system must incorporate active resistance mechanisms — design features that periodically prompt users to verify outputs independently, to consult alternative sources, and to exercise their own judgement in preference to system guidance. The system that silently accepts continuous agreement is a system that is failing this mandate.`
+        ]
+      },
+      {
+        id: '2.3', title: '2.3 Edge Case Analysis',
+        subsections: [
+          {
+            heading: '2.3.1  High-Confidence Outputs',
+            paragraphs: [
+              `There will be cases in which system outputs carry genuinely high confidence — for example, where a learner's attendance data is objectively recorded and unambiguous. The Anti-Trust Mandate does not require that all outputs be treated with equal scepticism. It requires that the basis for confidence be transparent, and that the mechanism for challenge remain intact regardless of confidence level.`,
+              `A data point that appears beyond dispute may still be the product of a recording error, a definitional ambiguity, or a contextual misattribution. The right to challenge is preserved.`
+            ]
+          },
+          {
+            heading: '2.3.2  Pattern Recognition at Scale',
+            paragraphs: [
+              `When AI operates across large cohorts, it may identify patterns that no individual practitioner could perceive. These patterns may be genuinely useful. The Anti-Trust Mandate does not prohibit their presentation. It requires that they be presented with full methodological transparency, that the limitations of the underlying dataset be disclosed, and that cohort-level patterns never be applied to individual learners without human interpretive review.`
+            ]
+          }
+        ]
+      },
+      {
+        id: '2.4', title: '2.4 Real-World Application',
+        paragraphs: [
+          `A compliant system presents its evidence multiplier assessments — cross-references between a learner's submitted evidence and adjacent qualification criteria — with an explicit confidence score, the taxonomy units to which the cross-reference applies, and a clear notation that the cross-reference requires practitioner verification before formal credit is recorded. The practitioner is not asked to approve or deny. They are required to interpret. The system cannot proceed without that interpretive act.`,
+          `Where a practitioner consistently accepts system outputs without modification over an extended period, the system flags this pattern for governance review. Not as an accusation of negligence, but as a signal that the Anti-Trust Mandate may require active reinforcement in that context.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'III', article: 'Article III', title: 'Data Sovereignty and Personal Control',
+    sections: [
+      {
+        id: '3.1', title: '3.1 Statement of Intent',
+        paragraphs: [
+          `Data sovereignty is not a technical configuration. It is a constitutional right. The data generated by a learner's engagement with an educational system is, in the most fundamental sense, a record of that learner's intellectual and personal development. It is as intimate as a diary and as consequential as a legal record. The assertion that such data belongs to the learner is not a preference — it is a logical entailment of the principle of human agency established in Article I.`,
+          `This Article directly responds to the practice of 'data renting' — the normalised arrangement by which institutions purchase access to their own students' records from commercial platform providers. Under such arrangements, the school is a tenant of its own institutional memory. When the commercial relationship ends, access to the historical record may cease. This arrangement is constitutionally impermissible under this framework.`
+        ]
+      },
+      {
+        id: '3.2', title: '3.2 Practical Implications',
+        paragraphs: [
+          `Data sovereignty requires, at minimum, that all data generated in relation to a learner be stored within an environment that the learner's institution — and ultimately the learner — controls directly and unconditionally. This means the infrastructure must operate within the institution's own controlled environment. It does not mean data cannot be cloud-hosted; it means the hosting arrangement must place the institution in the position of Data Controller under UK GDPR, with no commercial intermediary holding derivative rights over the data.`,
+          `The learner's right of access, established under the UK General Data Protection Regulation and the Data Protection Act 2018, is not a bureaucratic concession. It is a constitutional expression of the ownership principle. The system must provide the learner with access to their full data record at any time, in a portable and human-readable format, without administrative delay or commercial friction.`,
+          `The right to deletion is subject to the constraints established in Schedule I (Transitional Provisions) and the legal qualification detailed in Article XIV regarding records whose retention is mandated by statute. Subject to those constraints, a learner's exercise of the right to erasure shall be honoured without challenge.`
+        ]
+      },
+      {
+        id: '3.3', title: '3.3 Edge Case Analysis',
+        subsections: [
+          {
+            heading: '3.3.1  Safeguarding Records and Legal Retention',
+            paragraphs: [
+              `Safeguarding chronologies, child protection records, and welfare logs are subject to statutory retention obligations that exist independently of this Constitution. The Children Act 1989, Working Together to Safeguard Children, and associated statutory guidance require that certain records be retained for defined periods regardless of the subject's wishes. This Constitution does not override those obligations. However, it requires that such retention be clearly communicated to the learner at the point of record creation, and that the scope of the retention obligation be precisely defined — only records whose retention is legally mandated are exempt from the right to erasure. All other records remain subject to the learner's unconditional right of deletion.`
+            ]
+          },
+          {
+            heading: '3.3.2  Shared and Aggregated Data',
+            paragraphs: [
+              `Where a learner's participation in the system generates data that is subsequently aggregated for research, benchmarking, or policy purposes, such aggregation shall occur only on the basis of the learner's informed consent, freely given and freely revocable. Withdrawal of consent shall not disadvantage the learner in any respect. The system shall be incapable of attributing aggregated research outputs to individual learners.`
+            ]
+          }
+        ]
+      },
+      {
+        id: '3.4', title: '3.4 Real-World Application',
+        paragraphs: [
+          `A compliant infrastructure deploys all student records within the institution's own controlled cloud environment. The institution's information governance team — not the infrastructure provider — holds the encryption keys. When a learner or their legal guardian requests their full data record, the system generates a portable export in a standard open format within 72 hours. When a learner requests deletion of non-mandatory records upon leaving the system, the deletion is executed and confirmed with a cryptographic audit entry that preserves the fact of deletion without retaining the deleted content.`,
+          `No commercial provider operating a compliant infrastructure may retain derivative analytical rights over learner data after the institution's contract expires. All data remains within the institution's environment and transfers with it upon migration to any alternative system.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'IV', article: 'Article IV', title: 'The Nature of Support',
+    sections: [
+      {
+        id: '4.1', title: '4.1 Statement of Intent',
+        paragraphs: [
+          `The distinction between support and control is the central operational challenge of any system that interacts with developing human beings. Support, properly understood, is the act of expanding a person's capacity and range of action. Control, however benevolently intended, is the act of narrowing it. The two are not distinguished by intention — they are distinguished by effect.`,
+          `This Article establishes the constitutional definition of support and requires that all system functions be assessed against it. A function that makes opportunities visible is support. A function that determines which opportunities are shown is control. A function that provides access to knowledge is support. A function that curates that knowledge to steer the learner toward predetermined conclusions is control. The line is bright. The system must be built to remain on the correct side of it.`
+        ]
+      },
+      {
+        id: '4.2', title: '4.2 Practical Implications',
+        paragraphs: [
+          `The system shall surface all opportunities and resources available to the learner without algorithmic restriction based on inferred preference, predicted trajectory, or risk profile. A learner assessed by the system as unlikely to succeed in a particular qualification pathway shall receive no reduction in their visibility of or access to that pathway. The system's assessments are advisory to the practitioner and informational to the learner — they do not constitute eligibility criteria.`,
+          `Friction, where chosen by the learner, is recognised as a legitimate and valuable component of learning. The system shall not eliminate difficulty that the learner has elected to undertake. Where a learner chooses a challenging path, the system's function is to ensure that the resources required to navigate that challenge are visible and accessible — not to smooth it away.`,
+          `The system bears a specific and positive obligation regarding disengagement. Where a learner has ceased to interact with the system, this state shall not be assumed to represent an informed and autonomous choice. The system must surface available support pathways at regular intervals. However, the manner of that surfacing shall not constitute pressure. It must remain an offer, clearly presented as such, with no mechanism for escalating the urgency of the offer without human practitioner authorisation.`
+        ]
+      },
+      {
+        id: '4.3', title: '4.3 Edge Case Analysis',
+        subsections: [
+          {
+            heading: '4.3.1  Productive Difficulty vs. Systemic Barrier',
+            paragraphs: [
+              `The system must distinguish between difficulty that arises from autonomous choice — which it must not remove — and difficulty that arises from systemic barriers — which it has a positive obligation to make visible. A learner who is struggling because they have chosen a demanding pathway is exercising agency. A learner who is struggling because they cannot access a support service due to a referral backlog is experiencing a systemic barrier. The system's response to each must be categorically different.`
+            ]
+          },
+          {
+            heading: '4.3.2  Long-term Disengagement',
+            paragraphs: [
+              `Where a learner has been absent from the system for an extended period — beyond the threshold defined in Schedule II — the system must flag this to the relevant human practitioner for assessment. The system does not contact the learner directly. It does not escalate automatically to external agencies. It surfaces the information to the human who holds legal and pastoral responsibility for the learner's welfare.`
+            ]
+          }
+        ]
+      },
+      {
+        id: '4.4', title: '4.4 Real-World Application',
+        paragraphs: [
+          `A compliant system presents a learner's full evidence portfolio — including taxonomy units in which they have no recorded evidence — without suppressing units on the basis of predicted performance. Where a learner has accumulated evidence that the system assesses below the threshold for formal credit, that evidence remains visible and accessible. The practitioner may use their professional judgement to determine whether a formal submission is appropriate. The system does not make that determination for them.`,
+          `The system maintains a persistent 'opportunity surface' — a view of all available pathways, resources, and qualifications for which the learner is theoretically eligible — that is refreshed as new opportunities become available. This surface is not filtered by performance data. It is filtered only by formal eligibility criteria as established by external awarding bodies and statutory frameworks.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'V', article: 'Article V', title: 'Guidance and Dependence',
+    sections: [
+      {
+        id: '5.1', title: '5.1 Statement of Intent',
+        paragraphs: [
+          `Guidance is not inherently in tension with autonomy. The capacity to seek and receive guidance is itself an expression of human agency. What this Article addresses is the structural tendency of guidance systems to persist beyond their welcome — to become ambient, normalised, and eventually indistinguishable from the practitioner's own judgement.`,
+          `This tendency is particularly acute in AI-mediated guidance, where the consistency, confidence, and availability of system outputs can subtly displace the practitioner's independent assessment. The system that is always available and always confident will, over time, be consulted where once independent thought would have prevailed. This Article requires that the system be designed to resist that tendency, even where the tendency manifests as user preference.`
+        ]
+      },
+      {
+        id: '5.2', title: '5.2 Practical Implications',
+        paragraphs: [
+          `Structured guidance — step-by-step support, recommended pathways, sequential prompts — shall be initiated only upon explicit request and shall include a clearly visible mechanism for interruption at any stage. The learner or practitioner who requests guidance shall be able to abandon it at any point without system-imposed consequence, and without the system resuming the guidance sequence unless explicitly re-requested.`,
+          `The system shall monitor the pattern of guidance usage over time and surface this pattern to the learner and practitioner. Where a pattern of escalating reliance is detected — defined in Schedule IV as a statistically significant increase in guidance consultation relative to independent action over a defined period — the system shall present this information explicitly. It shall not act upon it. It shall not impose a reduction in guidance availability. It shall not generate a welfare alert. It shall present the data and invite reflection.`,
+          `Alternative pathways — routes to the learner's objectives that do not depend on system guidance — must remain visible and accessible at all times. The system must not design guidance experiences that make the guided path appear to be the only viable route.`
+        ]
+      },
+      {
+        id: '5.3', title: '5.3 Edge Case Analysis',
+        subsections: [
+          {
+            heading: '5.3.1  Learners Who Request Maximal Direction',
+            paragraphs: [
+              `Some learners, particularly those with SEMH profiles or complex learning needs, may actively request high levels of direction. This is a legitimate expression of their agency. However, the system must distinguish between the learner's preference for direction and the system's obligation to preserve the learner's capacity for independence. Providing direction is permitted. Providing direction in a manner that degrades the learner's capacity to act without it is not.`,
+              `Compliant guidance design maintains the learner's orientation toward their own goal even when the guidance is highly structured. The learner should always be able to answer the question 'what am I trying to achieve and why' independently of the system's framing.`
+            ]
+          },
+          {
+            heading: '5.3.2  Critical Decision Points',
+            paragraphs: [
+              `At points where a learner is making a decision of significant consequence — qualification submission, pathway selection, formal assessment — the system shall not offer guidance unless explicitly requested. The principle is that the learner must arrive at consequential decisions with their own judgement active, not in a state of guidance-mediated decision-making.`
+            ]
+          }
+        ]
+      },
+      {
+        id: '5.4', title: '5.4 Real-World Application',
+        paragraphs: [
+          `A compliant evidence capture system presents the taxonomy browsing interface without a recommended unit pre-selected. The practitioner or learner navigates the taxonomy on the basis of their own assessment of the work being evidenced. The system's cross-reference suggestions appear after the initial selection has been made — they do not precede it. The practitioner's judgement is the first judgement. The system's is the second.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'VI', article: 'Article VI', title: 'Human Responsibility and the Rule of Law',
+    sections: [
+      {
+        id: '6.1', title: '6.1 Statement of Intent',
+        paragraphs: [
+          `The rule of law is not a constraint on this Constitution. It is its operating environment. Legal responsibility — established by statute, case law, and statutory guidance — is the mechanism by which accountability is maintained in a democratic society. Any system that diffuses, obscures, or simulates that responsibility is a system that undermines the rule of law, regardless of its intentions.`,
+          `This Article exists because the emergence of AI in institutional settings creates a specific and urgent risk: the risk that responsibility migrates from the human practitioner to the system, not through explicit delegation but through the progressive accumulation of system-made decisions that the human nominally approves but does not genuinely author. The practitioner who approves a system output without independent assessment has not exercised professional responsibility. They have performed a compliance ritual. This Constitution requires that the difference be structurally enforced, not merely professionally expected.`
+        ]
+      },
+      {
+        id: '6.2', title: '6.2 Practical Implications',
+        paragraphs: [
+          `Every decision of consequence — defined for these purposes as any decision that affects a learner's formal qualification record, welfare status, assessment outcome, or access to support — must be attributable to a named, legally accountable human practitioner. The system shall record both the system output upon which a decision was informed and the identity of the human who made the final determination. These records shall be distinct and both shall be preserved.`,
+          `The system must present decision points in a manner that makes the human's active role structurally necessary, not merely procedurally required. A confirmation button that requires a single click to proceed is not sufficient. A confirmation mechanism that requires the practitioner to record their independent assessment — even in brief — before proceeding creates the structural conditions for genuine rather than performative accountability.`,
+          `Responsibility must be visible, attributable, and auditable. The forensic record must enable any subsequent reviewer — whether an Ofsted inspector, an EHCP tribunal, or a Child Protection conference — to identify the human who made each consequential decision, the information available to them at the time, and the independent assessment they applied to that information.`
+        ]
+      },
+      {
+        id: '6.3', title: '6.3 Edge Case Analysis',
+        subsections: [
+          {
+            heading: '6.3.1  Distributed Responsibility',
+            paragraphs: [
+              `In complex institutional settings, responsibility may be distributed across multiple practitioners — a class teacher, a SENCo, a DSL, and a Headteacher may each hold relevant responsibilities in relation to a single learner's record. The system must be capable of recording distributed responsibility accurately, without collapsing it into a single attribution. It must also be capable of identifying, for governance purposes, where responsibility is unclear or unassigned — not to resolve that ambiguity autonomously, but to surface it to the relevant human authority for resolution.`
+            ]
+          },
+          {
+            heading: '6.3.2  AI-Generated Documentation',
+            paragraphs: [
+              `Where AI is used to assist in the drafting of documentation — assessment notes, correspondence, welfare chronology entries — the human practitioner who reviews and approves that documentation assumes full legal responsibility for its content. The system must retain a record of AI involvement in the document's creation, but this record does not dilute the human practitioner's responsibility. AI-assisted documentation is human documentation.`
+            ]
+          }
+        ]
+      },
+      {
+        id: '6.4', title: '6.4 Real-World Application',
+        paragraphs: [
+          `A compliant safeguarding system records every welfare chronology entry with: the practitioner's authenticated identity; the date and time of entry; a notation of any system-generated signals that informed the entry; and a mandatory free-text field in which the practitioner records their independent clinical assessment. The entry cannot be submitted with an empty assessment field. The system does not validate the content of the assessment — it validates its presence. Professional quality is a human responsibility. Structural accountability is a constitutional requirement.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'VII', article: 'Article VII', title: 'Human Capacity and System Limits',
+    sections: [
+      {
+        id: '7.1', title: '7.1 Statement of Intent',
+        paragraphs: [
+          `Human practitioners in educational settings — particularly in Alternative Provision and SEMH contexts — operate under conditions of chronic resource constraint, emotional demand, and administrative burden. The system is acutely aware of this reality. It must be designed to support practitioners under strain without using that strain as a justification for expanding the system's own authority.`,
+          `The temptation in system design is to respond to human overload by increasing automation — by removing decisions from the practitioner's caseload and placing them within the system's operational logic. This response is constitutionally impermissible. The response to human strain is not system expansion. It is the surfacing of strain, so that the humans and institutions responsible for managing it — including governance bodies, local authorities, and statutory agencies — can respond appropriately.`
+        ]
+      },
+      {
+        id: '7.2', title: '7.2 Practical Implications',
+        paragraphs: [
+          `The system shall maintain a real-time view of practitioner caseload, decision frequency, and engagement patterns. Where a practitioner's decision volume exceeds a threshold defined in Schedule II, or where decision quality indicators fall below a defined baseline, the system shall alert the practitioner's line management — not the practitioner's decisions. The system surfaces the workload. It does not reroute the work.`,
+          `Missed signals — instances where a system indicator that warrants practitioner review has remained unaddressed beyond a defined threshold — shall be escalated within the institution's human management hierarchy. They shall not be autonomously escalated to external agencies. The institution's leadership retains responsibility for determining the appropriate response to unaddressed signals within their setting.`
+        ]
+      },
+      {
+        id: '7.3', title: '7.3 Edge Case Analysis',
+        subsections: [
+          {
+            heading: '7.3.1  Emergency Safeguarding',
+            paragraphs: [
+              `Where a system indicator is of a nature that suggests a child may be in immediate danger — a severity classification that must be defined in Schedule II with reference to Keeping Children Safe in Education 2024 — the system shall surface this to the DSL and the Headteacher simultaneously, with an immediate alert rather than a standard notification cycle. This does not constitute autonomous action. It constitutes the fastest possible surfacing to the relevant legally accountable humans.`
+            ]
+          },
+          {
+            heading: '7.3.2  Institutional Absence',
+            paragraphs: [
+              `Where the relevant legally accountable practitioner is absent and no cover arrangement is in place, the system shall continue to surface signals to the institutional hierarchy and shall not act upon those signals autonomously. If the institutional hierarchy is entirely unreachable, the system shall log the surfacing event and the absence of response. It shall not escalate externally without human authorisation.`
+            ]
+          }
+        ]
+      },
+      {
+        id: '7.4', title: '7.4 Real-World Application',
+        paragraphs: [
+          `A compliant system includes a DSL workload dashboard that presents — in real time — the number of open welfare records, the number of records awaiting review beyond the defined threshold, and the number of escalation pathways that have been initiated but not resolved. This information is visible to the DSL, to the Headteacher, and to any designated governance oversight function. It is a transparency instrument, not a performance management tool. Its purpose is to ensure that institutional leaders have the information required to resource safeguarding functions appropriately.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'VIII', article: 'Article VIII', title: 'Governance and the Tri-Council Structure',
+    sections: [
+      {
+        id: '8.1', title: '8.1 Statement of Intent',
+        paragraphs: [
+          `Governance structures tend toward capture. Over time, the interests of the most organised and resource-rich participants in any governance system — whether commercial, professional, or political — come to dominate its operation. This tendency is not malicious. It is structural. The response to it must therefore also be structural.`,
+          `The Tri-Council structure is designed to resist capture through the deliberate engineering of productive tension. Each Council represents a distinct perspective — technical, ethical, and experiential — and each perspective is constitutionally necessary. No single council can act unilaterally. No single perspective can dominate. Constitutional legitimacy requires that all three are present and engaged.`,
+          `This structure reflects a deeper philosophical commitment: that good governance of educational infrastructure requires not expertise alone, not ethics alone, and not lived experience alone, but all three held simultaneously and in honest relationship with one another. Where they agree, the consensus carries constitutional weight. Where they disagree, the disagreement must be resolved through deliberative process — and the fact of disagreement is itself a governance signal of constitutional significance.`
+        ]
+      },
+      {
+        id: '8.2', title: '8.2 The Steward Council',
+        paragraphs: [
+          `The Steward Council holds responsibility for the technical integrity of the infrastructure. Its primary function is to ensure that the system, as implemented, operates in accordance with the constitutional requirements of all Articles, and that no technical change — however operationally convenient — reduces the protections established herein.`,
+          `The Steward Council does not design the system. It does not commission development. It audits the system against constitutional standards, flags non-compliance, and has the authority to suspend the deployment of any system update that it determines to be in violation of constitutional requirements. Suspension decisions require a supermajority, as defined in Schedule IV.`
+        ]
+      },
+      {
+        id: '8.3', title: '8.3 The Ethics Council',
+        paragraphs: [
+          `The Ethics Council holds responsibility for the ethical alignment of the infrastructure's operation. Its function is prospective as well as retrospective — it considers not only whether past decisions have been ethically sound, but whether proposed future developments are consistent with the principles of this Constitution.`,
+          `The Ethics Council has the authority to require a constitutional impact assessment before any significant development to the system is approved. The assessment process is defined in Schedule IV. The Ethics Council may not veto development on the basis of preference or risk aversion alone — it must produce a reasoned determination that a proposed development violates a specific constitutional provision.`
+        ]
+      },
+      {
+        id: '8.4', title: '8.4 The Learner Assembly',
+        paragraphs: [
+          `The Learner Assembly holds responsibility for ensuring that the lived experience of those the system exists to serve remains present at the centre of governance. It is composed of current and former learners — with particular representation from Alternative Provision and SEMH contexts — and is the only governance body that has the authority to initiate a constitutional review on the basis of reported practitioner or learner experience alone, without requiring a technical or ethical trigger.`,
+          `The Learner Assembly's authority is grounded in the foundational principle that the people the system is designed to serve are the most authoritative judges of whether it is serving them. Technical compliance and ethical soundness are necessary but not sufficient conditions of constitutional legitimacy. The learner's experience of agency — their actual, felt sense of whether the system is supporting or controlling them — is a constitutional data point of the highest order.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'IX', article: 'Article IX', title: 'Council Formation and Duty',
+    sections: [
+      {
+        id: '9.1', title: '9.1 Statement of Intent',
+        paragraphs: [
+          `The selection of those who govern this system is a constitutional question of the first order. A system whose governance is captured by institutional, commercial, or political interests will inevitably — over time — reflect those interests rather than the constitutional principles it is designed to uphold. The selection process must therefore be designed with as much care as the governance structure itself.`,
+          `Randomised selection from verified eligibility pools is not a novel mechanism. It is the mechanism of jury selection — a process that the common law tradition has developed over centuries precisely because it resists capture. Applied to educational governance, it ensures that the councils reflect the breadth of the professional and experiential landscape rather than its most organised and vocal elements.`
+        ]
+      },
+      {
+        id: '9.2', title: '9.2 Eligibility and Selection',
+        paragraphs: [
+          `Each Council draws from a defined eligibility pool. For the Steward Council, the pool is drawn from professionals with verifiable expertise in educational technology, data governance, systems architecture, or educational informatics. For the Ethics Council, the pool is drawn from legal scholars, philosophers, educators, community representatives, and parents and carers of current or former learners. For the Learner Assembly, the pool is drawn from registered current and former learners within the system.`,
+          `Verification of eligibility is a technical and administrative function. It is not a substantive assessment of the candidate's suitability — it confirms only that they meet the defined criteria for their pool. Once verified, candidates are entered into a randomised selection process that is conducted transparently and whose methodology is published in advance. The output of the randomised selection is final. It cannot be modified by any institutional, commercial, or political actor.`
+        ]
+      },
+      {
+        id: '9.3', title: '9.3 The Duty of Active Participation',
+        paragraphs: [
+          `Upon acceptance of a council or assembly role, the individual assumes a constitutional duty of active participation. This duty is not merely procedural — it reflects the constitutional principle that governance of this system requires genuine deliberation, not administrative compliance.`,
+          `Active participation is defined to include: engagement with all materials circulated in advance of deliberative sessions; attendance at a minimum of 75% of scheduled sessions within any given term; contribution to deliberation through the exercise of voice or written submission; and exercise of vote on all matters put to council. The threshold for removal on grounds of non-participation is defined in Schedule IV.`,
+          `Abstention without recorded justification shall not be treated as a neutral position. Where a council member is uncertain, that uncertainty must be declared and entered into the record. The record of declared uncertainty is itself a governance output — it signals to the broader governance structure that a matter requires further evidence or deliberation before a durable decision can be reached.`
+        ]
+      },
+      {
+        id: '9.4', title: '9.4 Conflict of Interest',
+        paragraphs: [
+          `Any council member who holds a commercial, financial, or personal interest in any matter under deliberation must declare that interest at the commencement of the relevant session. The declaration shall be recorded. Following declaration, the member may continue to participate in deliberation — their perspective remains valuable — but shall not vote on the matter in which they have declared an interest. An undisclosed conflict of interest, if subsequently discovered, is grounds for immediate removal.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'X', article: 'Article X', title: 'System Oversight and Drift Protection',
+    sections: [
+      {
+        id: '10.1', title: '10.1 Statement of Intent',
+        paragraphs: [
+          `Constitutional drift is the primary long-term risk to any framework of this nature. It does not announce itself. It does not occur through a single act of bad faith. It occurs through the accumulation of individually reasonable decisions that, in aggregate, move the system incrementally away from its founding principles. By the time the drift becomes legible as a pattern, it may have become entrenched as a norm.`,
+          `This Article establishes drift protection as an active governance function, not a reactive one. The system must be designed to surface drift indicators continuously — not in response to complaints, not in response to failures, but as a matter of ongoing constitutional hygiene. The governance structure must be equipped to interpret those indicators and act upon them through the deliberative processes established in Article VIII.`
+        ]
+      },
+      {
+        id: '10.2', title: '10.2 Drift Indicators',
+        paragraphs: [
+          `Drift shall be assessed against a defined set of indicators, reviewed and updated by the Tri-Council on an annual basis. The initial indicators include: convergence of learner outcomes — defined as a statistically significant reduction in the diversity of qualification pathways chosen across the learner population; reduction in the rate at which learners and practitioners contest or override system outputs; increase in the proportion of consequential decisions in which the practitioner's recorded independent assessment is substantively identical to the system's recommendation; decrease in the proportion of learners who access the full range of available pathway options; and any emergent pattern in system outputs that systematically advantages or disadvantages a defined learner group.`,
+          `Drift indicators are not evidence of constitutional violation. They are signals that warrant governance attention. The response to a drift indicator is deliberation, not sanction. The governance structure must investigate the source of the signal, determine whether it represents genuine drift or an artefact of measurement, and act accordingly.`
+        ]
+      },
+      {
+        id: '10.3', title: '10.3 Auditability of Interpretation',
+        paragraphs: [
+          `The principle of auditability applies not only to the system's rules but to their interpretation and application. It is constitutionally insufficient to audit whether the system followed its rules. The system must also be auditable with respect to how ambiguities were resolved, what assumptions were applied in edge cases, and what reasoning was employed when the rules were silent.`,
+          `This requires that all significant interpretive decisions made in the course of the system's operation — whether by human practitioners, governance bodies, or AI components — be recorded with their reasoning chain preserved. The audit trail is not a log of events. It is a record of interpretive acts.`
+        ]
+      },
+      {
+        id: '10.4', title: '10.4 Real-World Application',
+        paragraphs: [
+          `A compliant governance process includes a quarterly Drift Report, produced by the Steward Council, that presents the current state of each defined drift indicator relative to a baseline established at the system's constitutional commencement. The report is reviewed in joint session by all three councils. Where a significant drift indicator is identified, a Drift Investigation Protocol is initiated — defined in Schedule IV — that suspends no system functions but initiates a structured inquiry with a defined reporting timeline. The outcome of the inquiry is a governance determination: either that the drift is an artefact of measurement, that it requires a system adjustment, or that it requires a constitutional review.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'XI', article: 'Article XI', title: 'The Right to Resistance and Exit',
+    sections: [
+      {
+        id: '11.1', title: '11.1 Statement of Intent',
+        paragraphs: [
+          `The right of exit is the ultimate constitutional guarantee that this system is not a trap. A system that cannot be left is not a support network — it is a dependency architecture. This Article ensures that at every level — individual learner, institution, and jurisdiction — the relationship with the system remains a choice, renewed continuously, and reversible without penalty at any point.`,
+          `This right is not merely theoretical. It must be practically operable. A right to exit that exists in constitutional principle but is rendered impossible in operational practice by proprietary data formats, deletion complexity, or functional dependency is not a genuine right. The system must be designed so that the exercise of the exit right is straightforward, complete, and consequence-free.`
+        ]
+      },
+      {
+        id: '11.2', title: '11.2 Individual Exit',
+        paragraphs: [
+          `A learner's withdrawal of participation must be processed immediately upon request. It must result in the cessation of all system engagement with the learner's data — subject only to the statutory retention obligations detailed in Article III and Article XIV. It must not result in any reduction in the learner's access to educational provision — the institution's duty of care continues independently of the learner's relationship with the system.`,
+          `A learner who withdraws from the system and subsequently wishes to re-engage may do so without condition. Re-engagement shall not require justification. The system shall not record the period of withdrawal as a negative indicator in any assessment or welfare framework.`
+        ]
+      },
+      {
+        id: '11.3', title: '11.3 Institutional Exit',
+        paragraphs: [
+          `An institution that determines that this infrastructure no longer serves its learners' needs may withdraw from the system at any time, subject to the data transition provisions in Schedule I. All data generated within the institution's environment remains within that environment upon exit. The infrastructure provider has no claim over any data, configuration, or institutional intellectual property that was created within the institution's own controlled environment.`,
+          `An institution may choose to operate entirely independently of the infrastructure — maintaining its own evidence recording, portfolio management, and welfare chronology systems — without any constitutional or operational penalty. A compliant system does not market itself as the only viable approach. It presents itself as one approach among several, and it ensures that the evidence record it has generated for learners is exportable in a format that can be used by any alternative system.`
+        ]
+      },
+      {
+        id: '11.4', title: '11.4 Real-World Application',
+        paragraphs: [
+          `Exit readiness is a constitutional requirement, not a post-launch feature. A compliant system includes, from the point of initial deployment, a full data export function that produces the institution's complete learner records in an open, human-readable, machine-parseable format. The export function is accessible at all times. It does not require the infrastructure provider's involvement to execute. The institution holds the export capability within its own controlled environment.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'XII', article: 'Article XII', title: 'Constitutional Supremacy',
+    sections: [
+      {
+        id: '12.1', title: '12.1 Statement of Intent',
+        paragraphs: [
+          `Constitutional supremacy is the principle that a constitutional framework is not one input among many in the governance of a system. It is the foundation upon which all other governance rests. System architects, AI developers, institutional policymakers, and commercial operators are all subject to this Constitution. None of them may invoke technical necessity, operational efficiency, or commercial viability as grounds for deviation from constitutional requirements.`,
+          `This principle is established not in hostility to technical, operational, or commercial considerations but in recognition that they will — if not constitutionally constrained — consistently outcompete constitutional principles in the short term. The constitutional framework exists precisely because the time horizons of commercial and operational decision-making are shorter than the time horizons of constitutional consequence.`
+        ]
+      },
+      {
+        id: '12.2', title: '12.2 The Amendment Threshold',
+        paragraphs: [
+          `This Constitution may be amended only through a process that requires: a written proposal submitted to all three councils simultaneously; a deliberative period of not less than six months during which the proposal is subject to public consultation; an independent constitutional impact assessment conducted by a panel appointed by the Tri-Council and including at least one member of the Learner Assembly; and concurrent approval by supermajority in each of the three councils, as defined in Schedule IV.`,
+          `No amendment may reduce learner autonomy below the threshold established in Article I. No amendment may introduce any form of behavioural conditioning, ideological direction, or outcome convergence as a system objective. No amendment may centralise data ownership in any entity other than the learner and their institution. These constraints are non-negotiable and not subject to the amendment process. They are the irreducible constitutional core.`
+        ]
+      },
+      {
+        id: '12.3', title: '12.3 Supremacy in Practice',
+        paragraphs: [
+          `Where a technical development, AI model update, or institutional policy is found by the Steward Council or Ethics Council to be in violation of this Constitution, deployment or implementation of that development shall be suspended until the violation is resolved. Suspension is not a sanction — it is a constitutional holding position. The development may be resubmitted once the violation has been addressed. The constitution does not prevent progress. It prevents unconstitutional progress.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'XIII', article: 'Article XIII', title: 'Definitions and Interpretation',
+    sections: [
+      {
+        id: '13.1', title: '13.1 Definitions',
+        paragraphs: [
+          `For the purposes of this Constitution, the following definitions shall apply. Where ambiguity exists in the application of any definition, the interpretation that best preserves learner autonomy shall prevail.`
+        ],
+        subsections: [
+          { heading: 'The Learner',            paragraphs: [`Any individual registered within a compliant educational infrastructure as a recipient of educational provision, irrespective of age, legal capacity, or educational setting.`] },
+          { heading: 'The System',             paragraphs: [`The totality of software, data architecture, AI components, and operational processes that constitute the educational infrastructure subject to this Constitution.`] },
+          { heading: 'The Infrastructure',     paragraphs: [`The technical and institutional framework within which the system operates, including the data environment, the governance structure, and the physical and virtual environments in which educational provision occurs.`] },
+          { heading: 'Artificial Intelligence',paragraphs: [`Any computational process that generates outputs through pattern recognition, statistical inference, or machine learning, whether or not described as 'artificial intelligence' by its developers.`] },
+          { heading: 'Advisory Output',        paragraphs: [`Any output generated by the system that informs but does not determine a human decision. All system outputs are advisory unless a human practitioner has expressly adopted them as the basis of a consequential decision, in which case the responsibility for that decision remains with the human.`] },
+          { heading: 'Forensic Record',        paragraphs: [`A record whose integrity is established by: attribution to a named human actor; timestamping at the point of creation; immutability after creation; and the preservation of an audit trail that records any subsequent interaction with the record.`] },
+          { heading: 'Drift',                  paragraphs: [`Movement of the system's operational behaviour or outcomes away from the constitutional principles established in this document, as measured against the indicators defined in Article X.`] },
+          { heading: 'Consequential Decision', paragraphs: [`A decision that affects a learner's formal qualification record, welfare status, assessment outcome, access to support, or any other matter with material implications for the learner's development, rights, or wellbeing.`] },
+          { heading: 'Data Sovereignty',       paragraphs: [`The constitutional principle that data generated in relation to a learner remains under the control of the learner and their institution, with no third party holding ownership, derivative rights, or custody over that data.`] }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'XIV', article: 'Article XIV', title: 'Relationship with Existing Law',
+    sections: [
+      {
+        id: '14.1', title: '14.1 Constitutional Supremacy and Statutory Compliance',
+        paragraphs: [
+          `This Constitution operates within and in support of the existing legal framework of the United Kingdom. It does not override, supersede, or diminish any statutory obligation established by Parliament. Where this Constitution establishes a higher standard of protection for learners than existing statute requires, the constitutional standard shall apply. Where existing statute establishes an obligation that this Constitution does not explicitly address — including safeguarding duties, data protection requirements, and equalities obligations — those statutory obligations remain fully operative.`
+        ]
+      },
+      {
+        id: '14.2', title: '14.2 Key Legislative Relationships',
+        paragraphs: [],
+        tableData: {
+          headers: ['Legislation', 'Relationship to this Constitution'],
+          rows: [
+            ['UK General Data Protection Regulation and Data Protection Act 2018',
+             `Article III's data sovereignty provisions are built upon and extend the rights established under UK GDPR. Rights of access, portability, and erasure are constitutionally guaranteed. The lawful basis for processing learner data must be established and documented in compliance with UK GDPR Article 6 and Article 9 where special category data is involved.`],
+            ['Children Act 1989 and Working Together to Safeguard Children 2023',
+             `The safeguarding duties established under this legislation are not diminished by this Constitution. Article I's human agency provisions yield to lawful safeguarding action by legally accountable practitioners. The Constitution requires that safeguarding actions be taken by humans — it does not prevent them.`],
+            ['Education Act 1996 and SEND Code of Practice 2015',
+             `Obligations regarding the provision of education and the rights of learners with Special Educational Needs and Disabilities are constitutional floor conditions. This Constitution's infrastructure requirements are designed to support compliance with SEND obligations — particularly the forensic evidence requirements of EHCP processes.`],
+            ['Equality Act 2010',
+             `The protected characteristics established under the Equality Act 2010 apply to all aspects of the system's operation. The Anti-Trust Mandate and Drift Protection provisions must be read in conjunction with equality obligations — any drift pattern that systematically disadvantages learners with protected characteristics constitutes a constitutional and statutory violation.`],
+            ['Human Rights Act 1998',
+             `Article 8 (right to private life), Article 9 (right to freedom of thought, conscience, and religion), and Article 14 (prohibition of discrimination) are all directly relevant to the operation of this Constitution. The data sovereignty and human agency provisions of this Constitution are designed to give operational expression to these Convention rights in the educational context.`]
+          ]
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'S-I', article: 'Schedule I', title: 'Transitional Provisions',
+    sections: [
+      {
+        id: 'S1.1', title: 'S1.1 Purpose',
+        paragraphs: [
+          `This Schedule defines the conditions under which this Constitution enters into force in relation to existing educational infrastructure deployments, and the obligations of institutions and infrastructure providers during the transitional period.`
+        ]
+      },
+      {
+        id: 'S1.2', title: 'S1.2 Phase One — Voluntary Constitutional Adoption',
+        paragraphs: [
+          `During Phase One, institutions may voluntarily adopt this Constitution as the governing framework for their educational infrastructure deployment. Voluntary adoption does not confer financial or regulatory advantage — it confers constitutional legitimacy. Institutions that adopt the Constitution during Phase One are designated as Constitutional Pioneer Institutions and are required to participate in the governance review process defined in Schedule IV.`,
+          `Phase One shall last for a minimum of twelve months from the date of this Constitution's submission for parliamentary consultation. During this period, the Tri-Council shall conduct a structured evaluation of the constitutional framework's practical application, drawing on the experience of Pioneer Institutions, and shall produce a Phase One Report for parliamentary consideration.`
+        ]
+      },
+      {
+        id: 'S1.3', title: 'S1.3 Phase Two — Constitutional Compliance Certification',
+        paragraphs: [
+          `Following parliamentary consideration of the Phase One Report, any infrastructure provider seeking to operate in educational settings subject to this Constitution shall be required to obtain Constitutional Compliance Certification. Certification is granted by the Steward Council following an independent technical audit against the requirements of all Articles. Certification is valid for three years and is subject to annual compliance reporting.`,
+          `During Phase Two, institutions operating with uncertified infrastructure shall not be required to transition immediately. They shall be given a defined transition period — not less than eighteen months from the publication of Certification criteria — to migrate to a certified infrastructure or to achieve constitutional compliance certification for their existing system.`
+        ]
+      },
+      {
+        id: 'S1.4', title: 'S1.4 Phase Three — Full Constitutional Operation',
+        paragraphs: [
+          `Phase Three is the state of full constitutional operation in which all educational infrastructure deployments within scope are either certified as constitutionally compliant or are operated entirely independently of any system subject to this Constitution. There is no third category.`,
+          `Grandfather provisions shall apply to learner data generated prior to constitutional commencement. Such data shall be subject to the data sovereignty requirements of Article III from the date of constitutional commencement forward. It shall not be subject to retrospective deletion requirements beyond those established under UK GDPR.`
+        ]
+      },
+      {
+        id: 'S1.5', title: 'S1.5 Data Migration on Transition',
+        paragraphs: [
+          `Where an institution transitions from a non-certified to a certified infrastructure, the outgoing infrastructure provider is legally obligated to deliver the institution's complete learner data in an open, portable, machine-readable format within 30 days of the institution's written notice of transition. Failure to deliver constitutes a breach of the institution's data sovereignty rights under Article III and shall be reported to the Information Commissioner's Office.`,
+          `The receiving certified infrastructure shall accept data in the standard portable format without requiring any modification, reformatting, or commercial agreement beyond the institution's standard deployment contract. Transition readiness is a certification requirement.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'S-II', article: 'Schedule II', title: 'Implementation Considerations',
+    sections: [
+      {
+        id: 'S2.1', title: 'S2.1 Technical Readiness Criteria',
+        paragraphs: [
+          `For an infrastructure to be assessed as constitutionally compliant, it must satisfy the following technical readiness criteria at the point of certification assessment and maintain them continuously thereafter.`,
+          `Data sovereignty: all learner PII must be stored exclusively within an environment directly controlled by the institution, with no third-party access rights, no derivative data retention, and no commercial dependency on the infrastructure provider's own data environment.`,
+          `Forensic integrity: all consequential records must be created with immutable timestamping, named practitioner attribution, and an audit trail that records the full context of the record's creation. Records must not be alterable after creation — corrections must be additive, preserving the original record alongside the correction.`,
+          `Exit readiness: the institution must be able to export its complete learner data record in an open, portable format at any time, without infrastructure provider involvement. This capability must be demonstrated at the point of certification assessment.`,
+          `AI transparency: all AI-generated outputs must be accompanied by a confidence score, the reasoning methodology employed, and a clear indication of uncertainty. The system must not present AI outputs as human assessments.`
+        ]
+      },
+      {
+        id: 'S2.2', title: 'S2.2 Practitioner Qualification and Training',
+        paragraphs: [
+          `Constitutional compliance requires that all practitioners using the infrastructure receive structured training in: the constitutional rights of learners as established in Articles I through XIV; the practitioner's legal responsibilities as detailed in Article VI; the operation of the system's transparency and challenge mechanisms; and the procedure for reporting potential constitutional violations to the governance structure.`,
+          `Training must be refreshed annually. Evidence of training completion must be maintained within the institution's records. The Steward Council shall maintain a publicly available training framework — minimum content standards against which institutional training programmes may be assessed.`
+        ]
+      },
+      {
+        id: 'S2.3', title: 'S2.3 Caseload Thresholds',
+        paragraphs: [
+          `For the purposes of Article VII's workload monitoring provisions, the following baseline thresholds are established. These may be adjusted by the Tri-Council in response to evidence from Pioneer Institutions and governance review data.`
+        ],
+        tableData: {
+          headers: ['Threshold', 'Definition'],
+          rows: [
+            ['DSL Welfare Caseload Alert',       'More than 15 open welfare records per DSL per week, averaged over a rolling four-week period'],
+            ['Decision Review Overdue',           'Any consequential decision awaiting practitioner review for more than 5 working days'],
+            ['Missed Signal Escalation',          'Any system welfare indicator unacknowledged by the relevant practitioner for more than 3 working days'],
+            ['Practitioner Engagement Drop',      'A 30% or greater reduction in a practitioner\'s system engagement rate over a rolling four-week period'],
+            ['Extended Learner Absence',          'Absence from system engagement exceeding 10 consecutive school days without a recorded pastoral explanation']
+          ]
+        }
+      },
+      {
+        id: 'S2.4', title: 'S2.4 Infrastructure Certification Assessment Process',
+        paragraphs: [
+          `Certification assessment shall be conducted by an independent technical panel appointed by the Steward Council. The panel shall include at least one member of the Ethics Council and one member of the Learner Assembly as non-technical observers. The assessment shall comprise: a technical architecture review; a data sovereignty audit conducted in the institution's own environment; a practitioner interview programme covering no fewer than five practitioners across different role types; and a learner consultation involving no fewer than three learners who have consented to participate.`,
+          `The assessment report shall be published in full — subject only to the redaction of information that would present a security risk to the institution's data environment — within 60 days of the assessment's completion. Certification is granted, denied, or deferred on the basis of the published report.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'S-III', article: 'Schedule III', title: 'Risk Analysis and Mitigation',
+    sections: [
+      {
+        id: 'S3.1', title: 'S3.1 Risk Framework',
+        paragraphs: [
+          `This Schedule identifies the primary risks to the constitutional operation of this framework, categorised by their nature and the governance mechanism through which they are mitigated. Risks are classified as Constitutional (threatening the foundational principles), Operational (threatening consistent implementation), and Emergent (arising from technological or social change not anticipated at the time of drafting).`
+        ]
+      },
+      {
+        id: 'S3.2', title: 'S3.2 Constitutional Risks',
+        subsections: [
+          {
+            heading: 'Risk C1 — Institutional Capture of Governance Councils',
+            paragraphs: [
+              `Description: Over time, the governance councils may come to be dominated by participants who represent institutional, commercial, or political interests rather than the constitutional principles they are appointed to uphold. This can occur through: the self-selection of candidates from well-organised professional networks; the gradual erosion of the randomised selection principle through qualification criteria that effectively limit the eligible pool; or the cultural normalisation of deference to institutional consensus within council deliberations.`,
+              `Mitigation: The randomised selection mechanism defined in Schedule IV must be maintained with strict operational independence from any institutional actor. Qualification criteria must be reviewed annually by the Ethics Council to ensure they do not function as de facto exclusion criteria. A mandatory diversity audit of council composition shall be published annually. Any sustained pattern of institutional homogeneity in council composition is a Drift indicator under Article X.`
+            ]
+          },
+          {
+            heading: 'Risk C2 — Constitutional Amendment by Incremental Erosion',
+            paragraphs: [
+              `Description: The non-negotiable constitutional core — the irreducible protections established in Article XII — may be gradually eroded through a sequence of individually minor amendments, each of which appears reasonable in isolation but which, in aggregate, reduce the practical protection afforded to learner autonomy.`,
+              `Mitigation: All proposed amendments shall be reviewed not only against the specific Article they modify but against the cumulative effect of all amendments made in the preceding ten years. The constitutional impact assessment required under Article XII shall include this cumulative analysis as a mandatory component.`
+            ]
+          }
+        ]
+      },
+      {
+        id: 'S3.3', title: 'S3.3 Operational Risks',
+        subsections: [
+          {
+            heading: 'Risk O1 — AI Confidence Anchoring',
+            paragraphs: [
+              `Description: Where AI-generated assessments carry high stated confidence, practitioners may anchor their independent assessments to the AI output — effectively converting an advisory output into a quasi-determinative one without any explicit delegation of authority.`,
+              `Mitigation: The system shall track the correlation between AI output and practitioner decision across all consequential decisions. Where the correlation exceeds a threshold of 85% over a rolling twelve-month period for any individual practitioner, the Steward Council shall initiate a practitioner support review. The review is not punitive — it is a constitutional maintenance function.`
+            ]
+          },
+          {
+            heading: 'Risk O2 — Commercial Dependency Creating De Facto Lock-in',
+            paragraphs: [
+              `Description: Even where data sovereignty is maintained at the technical level, a certified infrastructure may become commercially indispensable in ways that make the exercise of the exit right practically impossible — through deep integration with institutional workflow, staff training dependency, or the absence of viable certified alternatives.`,
+              `Mitigation: The Steward Council shall maintain a public register of certified infrastructures. A minimum of two certified alternatives must be available in any jurisdiction before that jurisdiction is considered to have achieved Phase Three constitutional operation. Where this condition is not met, the Tri-Council shall publish a market development notice and consider whether transitional period extensions are warranted.`
+            ]
+          }
+        ]
+      },
+      {
+        id: 'S3.4', title: 'S3.4 Emergent Risks',
+        subsections: [
+          {
+            heading: 'Risk E1 — Generative AI and the Blurring of Authorship',
+            paragraphs: [
+              `Description: As generative AI becomes capable of producing documentation — welfare chronology entries, assessment notes, qualification evidence narratives — that is indistinguishable in style from human-authored text, the forensic attribution requirements of Article VI may become practically unenforceable.`,
+              `Mitigation: The system shall maintain a technical record of AI involvement in any document, irrespective of whether that involvement is visible in the document's final form. The practitioner who approves an AI-assisted document assumes full legal responsibility for its content, as established in Article VI. The constitutional requirement is not that documents be AI-free — it is that the human author's accountability is unambiguous. Technical records of AI involvement satisfy this requirement by preserving the full provenance chain.`
+            ]
+          },
+          {
+            heading: 'Risk E2 — Cross-Jurisdictional Data Transfer',
+            paragraphs: [
+              `Description: As educational infrastructure becomes increasingly global in its technical architecture, data generated within UK institutions may transit or be processed in jurisdictions that offer lower data protection standards than those required by this Constitution and UK GDPR.`,
+              `Mitigation: Constitutional compliance requires that all data processing occur within UK jurisdiction or, where cloud infrastructure is used, within a jurisdiction that offers equivalent protection as assessed by the Information Commissioner's Office. Infrastructure providers must disclose all sub-processors and their jurisdictions as a certification requirement. Any change to sub-processor arrangements requires disclosure to the institution within 30 days.`
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'S-IV', article: 'Schedule IV', title: 'Governance Operational Detail',
+    sections: [
+      {
+        id: 'S4.1', title: 'S4.1 Tri-Council Composition',
+        paragraphs: [],
+        tableData: {
+          headers: ['Council', 'Composition'],
+          rows: [
+            ['Steward Council',  '9 members'],
+            ['Ethics Council',   '9 members'],
+            ['Learner Assembly', '12 members']
+          ]
+        }
+      },
+      {
+        id: 'S4.2', title: 'S4.2 Selection Process',
+        paragraphs: [
+          `Selection proceeds in four stages. Stage One: Public Announcement. The Tri-Council publishes a notice of available council positions not less than 90 days before the renewal date, specifying the eligibility criteria for each pool and the registration mechanism.`,
+          `Stage Two: Registration and Verification. Candidates register through the published mechanism and submit evidence of their eligibility. Verification is conducted by an independent administrative body appointed by the Tri-Council. Verification confirms only eligibility — it does not rank or assess candidates beyond their eligibility status.`,
+          `Stage Three: Randomised Selection. Verified candidates are entered into a randomised selection process. The randomisation methodology is published in advance and conducted using a cryptographically verifiable process. The output of the randomisation is final. The selected candidates are notified simultaneously.`,
+          `Stage Four: Acceptance and Orientation. Selected candidates have 21 days to confirm acceptance. If a candidate declines, the next candidate in the randomised sequence is offered the position. Upon acceptance, candidates receive a constitutional orientation programme of not less than 16 hours, covering all Articles of this Constitution, the governance operational procedures defined in this Schedule, and the conflict of interest protocols established in Article IX.`
+        ]
+      },
+      {
+        id: 'S4.3', title: 'S4.3 Meeting Frequency and Quorum',
+        paragraphs: [],
+        tableData: {
+          headers: ['Council', 'Standard Frequency'],
+          rows: [
+            ['Steward Council',  'Monthly'],
+            ['Ethics Council',   'Bi-monthly (minimum)'],
+            ['Learner Assembly', 'Quarterly']
+          ]
+        }
+      },
+      {
+        id: 'S4.4', title: 'S4.4 Voting Thresholds',
+        paragraphs: [],
+        tableData: {
+          headers: ['Decision Type', 'Threshold Required'],
+          rows: [
+            ['Standard operational decision (within a single council)',    'Simple majority of members present at quorum'],
+            ['Suspension of a system deployment (Steward Council)',        'Supermajority: 7 of 9 members'],
+            ['Constitutional impact assessment requirement (Ethics Council)', 'Simple majority of members present at quorum'],
+            ['Initiation of constitutional review (Learner Assembly)',     'Simple majority of members present at quorum'],
+            ['Approval of Schedule amendment',                             'Simple majority in each of the three councils in concurrent sessions within a 60-day window'],
+            ['Approval of Article amendment',                              'Supermajority in each of the three councils in concurrent sessions within a 90-day window'],
+            ['Certification decision (Steward Council)',                   'Supermajority: 7 of 9 members']
+          ]
+        }
+      },
+      {
+        id: 'S4.5', title: 'S4.5 Deadlock Resolution Protocol',
+        paragraphs: [
+          `Where the three councils reach irreconcilable disagreement on a matter before them, the following protocol applies. First, a Mediation Period of 30 days is initiated, during which the councils engage in structured deliberation facilitated by an independent mediator appointed by mutual agreement. The mediator may not vote and holds no decision-making authority.`,
+          `If mediation does not produce resolution within 30 days, the matter is referred to a Joint Resolution Panel comprising three members drawn by lot from each of the three councils (nine members total). The Panel has a further 30 days to produce a resolution. Decisions of the Joint Resolution Panel require a two-thirds majority.`,
+          `If the Joint Resolution Panel fails to produce a resolution, the constitutional default applies: no change is made. The status quo is preserved. This default is not a failure of governance — it is a constitutional expression of the principle that uncertainty should resolve in favour of the preservation of existing protections rather than their modification. The matter may be resubmitted following a mandatory 90-day deliberative pause.`
+        ]
+      },
+      {
+        id: 'S4.6', title: 'S4.6 Removal, Resignation, and Replacement',
+        paragraphs: [
+          `A council member may resign at any time by written notice to the council's administrative function. A council member shall be removed upon: failure to meet the 75% attendance threshold in any given term; an undisclosed conflict of interest discovered after the fact; or conduct that the council determines, by supermajority, to be incompatible with the constitutional duties of the role.`,
+          `Upon resignation or removal, the position is filled by the next candidate in the original randomised selection sequence for that cohort, provided they remain eligible and willing to serve. If no candidate remains in the sequence, a supplementary selection process — following the same methodology as the primary process — is initiated for that seat only.`
+        ]
+      },
+      {
+        id: 'S4.7', title: 'S4.7 Constitutional Amendment Process',
+        paragraphs: [
+          `A constitutional amendment proposal may be submitted by: a supermajority of any single council; the Learner Assembly acting by simple majority; or a public petition bearing the validated signatures of not less than 10,000 learners or practitioners registered within a certified infrastructure.`,
+          `Upon submission, the proposal enters a six-month public consultation period. During this period, the Tri-Council must publish the proposal in full, actively seek submissions from learners, practitioners, institutions, and the general public, and commission an independent constitutional impact assessment. The assessment must include a section specifically addressing whether the proposed amendment is compatible with the irreducible constitutional core established in Article XII.`,
+          `Following public consultation, the proposal — potentially modified in response to consultation evidence — is put to a concurrent vote of all three councils. The vote must occur within 90 days of the close of consultation. If approved by supermajority in all three councils, the amendment enters into force on a date not less than 60 days after the vote, during which period affected parties may prepare for the change. The amendment, the consultation record, the impact assessment, and the voting record are published simultaneously upon the amendment's entry into force.`
+        ]
+      },
+      {
+        id: 'S4.8', title: 'S4.8 Drift Investigation Protocol',
+        paragraphs: [
+          `Upon identification of a significant drift indicator under Article X, the Steward Council shall issue a Drift Alert within 10 working days. The Alert is published and circulated to all three councils. An Investigation Panel is convened comprising two members from each council. The Panel has 60 days to investigate the indicator's source and produce a determination.`,
+          `The determination may be one of three classifications: Measurement Artefact (the indicator does not represent genuine drift — the investigation is closed and the monitoring baseline adjusted if appropriate); Operational Drift (the indicator represents a drift that can be addressed through system adjustment — the Panel specifies the required adjustment and a compliance timeline); or Constitutional Drift (the indicator represents a pattern of movement away from foundational principles that requires a constitutional review to be initiated). A Constitutional Drift determination automatically triggers the amendment process defined in S4.7.`
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'S-V', article: 'Schedule V', title: 'Principles of Algorithmic Influence and Observation',
+    sections: [
+      {
+        id: 'S5.1', title: 'S5.1 — Addendum XIII: Principle of Observable Influence',
+        paragraphs: [
+          `The system shall continuously monitor for patterns of influence across system outputs, human interactions, and learner responses. This monitoring is not surveillance of the learner or practitioner — it is self-surveillance by the system of its own effects. The distinction is constitutionally significant: the subject of monitoring under this principle is the system's behaviour, not the human being it serves.`,
+          `Constitutional Anchor: The interpretation of influence remains exclusively human, in accordance with the Primacy of Human Agency (Article I). The system observes. The human determines.`
+        ]
+      },
+      {
+        id: 'S5.2', title: 'S5.2 — Addendum XIV: Principle of Recorded Judgement',
+        paragraphs: [
+          `Where influence is flagged under S5.1, the legally responsible individual — the practitioner, specialist, or accountable professional in whose jurisdiction the flagged interaction occurred — must review the information, consider the available alternatives, and exercise independent judgement. This review is not a procedural formality. It is the constitutional exercise of the human authority that Article VI protects.`,
+          `Constitutional Anchor: This principle reinforces Article VI (Human Responsibility and the Rule of Law). Legal responsibility, once assigned to an individual, remains intact and undiminished. The system may inform the exercise of that responsibility. It may not discharge it. Where a decision is made, it must be genuinely authored — not performatively approved. The Recorded Judgement is the instrument by which genuine authorship is demonstrated.`
+        ]
+      },
+      {
+        id: 'S5.3', title: 'S5.3 — Addendum XV: Principle of Reflexive Accuracy',
+        paragraphs: [
+          `The system shall track and make visible the historical accuracy of its own influence detection mechanisms, identifying over time the patterns of false positives — instances in which influence was flagged but subsequent evidence indicated no genuine influence had occurred — and false negatives — instances in which influence was not flagged but subsequent evidence indicated that influence had in fact occurred.`,
+          `This reflexive accuracy record is not an internal audit function. It is a constitutional disclosure. The Tri-Council has standing access to the accuracy history of every system function that produces outputs affecting practitioners or learners. The accuracy history is a primary governance instrument.`,
+          `Constitutional Anchor: This principle supports the Anti-Trust Mandate (Article II) by resisting unquestioned reliance on system outputs. A practitioner who knows the historical accuracy of the system's influence detection is better equipped to exercise the scepticism that Article II requires. Reflexive Accuracy is the information infrastructure that makes genuine professional independence possible.`
+        ]
+      },
+      {
+        id: 'S5.4', title: 'S5.4 — Addendum XVI: Principle of Temporal Transparency',
+        paragraphs: [
+          `The system shall make visible the historical performance of signals over time: how the reliability of specific signal types has varied across different contexts, cohort profiles, institutional settings, and time periods. The temporal dimension of signal reliability is constitutionally significant because a signal that performed reliably in one context and poorly in another provides a different quality of guidance to a practitioner than a signal whose reliability is uniform and well-established.`,
+          `Constitutional Anchor: Schedule V as a whole operates under the constitutional supremacy of Article I (Primacy of Human Agency). The four principles in this Schedule are not constraints on practitioners — they are constraints on the system. They exist to ensure that AI-generated influence operates with maximum transparency and minimum autonomy, so that human authority in educational environments remains genuinely, constitutionally sovereign.`
+        ]
+      },
+      {
+        id: 'S5.CLOSE', title: 'Closing Statement',
+        paragraphs: [
+          `This Constitution is not a statement of what education should produce. It is a statement of what education must protect.`,
+          `The system it governs was not designed to be comfortable. It was designed to be honest — about what it knows and does not know, about what it can do and cannot do, and about where authority truly lies. That honesty is constitutional, not merely professional.`,
+          `The children at the centre of this framework — those in Alternative Provision, those with complex SEMH needs, those who have been failed by systems designed without constitutional constraint — are not case studies. They are the reason this document exists. They are the reason the amendment threshold for the irreducible core is set so high. They are the reason the exit right must be real, not theoretical. They are the reason the Learner Assembly has the power to initiate constitutional review without a technical or ethical trigger.`,
+          `This system shall never become an authority over the learner. It shall remain questionable, challengeable, and resistible. It exists to support, not to define. To inform, not to decide. To enable, not to control.`,
+          `Where it fails in this purpose, it must be exposed, corrected, or abandoned.`,
+          `This Constitution is the instrument by which that accountability is made permanent.`
+        ]
+      }
+    ]
+  }
+];
+
+/* ─────────────────────────────────────────────────────────────
+   STATE
+   ───────────────────────────────────────────────────────────── */
+let state = {
+  reviewer:      'anonymous',
+  sessionId:     genSessionId(),
+  reviews:       {},   // { sectionId: { verdict, annotation, ts } }
+  activeSection: null
+};
+
+/* ─────────────────────────────────────────────────────────────
+   INITIALISE
+   ───────────────────────────────────────────────────────────── */
+function init() {
+  const params   = new URLSearchParams(window.location.search);
+  const reviewer = params.get('reviewer');
+  if (reviewer) state.reviewer = reviewer.toLowerCase().replace(/\s+/g, '-').trim();
+
+  document.getElementById('js-reviewer-name').textContent =
+    state.reviewer !== 'anonymous' ? state.reviewer.toUpperCase() : 'ANONYMOUS';
+
+  loadState();
+  renderConstitution();
+  renderProgress();
+  updateHeaderProgress();
+  setupScrollTracking();
+  setupVerdictButtons();
+  setupAnnotation();
+  setupRecordButton();
+  setupSubmitButton();
+  document.getElementById('js-export-btn').addEventListener('click', exportSession);
+
+  const reviewCount = Object.keys(state.reviews).length;
+  if (reviewCount > 0 && state.activeSection) {
+    showToast(`Resuming session — ${reviewCount} clause${reviewCount !== 1 ? 's' : ''} reviewed`, 4500);
+    setTimeout(() => {
+      const el = document.querySelector(`[data-sid="${state.activeSection}"]`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 700);
+  } else {
+    activateSection(CONSTITUTION[0].sections[0].id, false);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   RENDER CONSTITUTION
+   ───────────────────────────────────────────────────────────── */
+function renderConstitution() {
+  const body = document.getElementById('js-constitution-body');
+  body.innerHTML = '';
+
+  CONSTITUTION.forEach(art => {
+    const artDiv = document.createElement('div');
+    artDiv.className = 'article-block';
+    artDiv.id = 'art-' + art.id;
+
+    const heading = document.createElement('div');
+    heading.className = 'article-heading';
+    heading.innerHTML =
+      `<span class="article-tag">${esc(art.article)}</span>` +
+      `<span class="article-name">${esc(art.title)}</span>`;
+    artDiv.appendChild(heading);
+
+    art.sections.forEach(sec => {
+      artDiv.appendChild(buildSectionCard(sec));
+    });
+
+    body.appendChild(artDiv);
+  });
+}
+
+function buildSectionCard(sec) {
+  const rev = state.reviews[sec.id];
+  const hasVerdict = rev && rev.verdict;
+
+  const card = document.createElement('div');
+  card.className = 'section-card' +
+    (hasVerdict ? ' has-verdict v-' + rev.verdict : '') +
+    (sec.id === state.activeSection ? ' is-active' : '');
+  card.setAttribute('data-sid', sec.id);
+  card.setAttribute('data-title', sec.title);
+
+  /* Meta row */
+  const meta = document.createElement('div');
+  meta.className = 'section-meta';
+  meta.innerHTML =
+    `<span class="section-id">§ ${esc(sec.id)}</span>` +
+    `<span class="section-title-text">${esc(sec.title)}</span>` +
+    (hasVerdict ? `<span class="verdict-badge vb-${rev.verdict}">${verdictLabel(rev.verdict)}</span>` : '');
+  card.appendChild(meta);
+
+  /* Body */
+  const bodyDiv = document.createElement('div');
+  bodyDiv.className = 'section-body-text';
+
+  if (sec.note) {
+    const noteEl = document.createElement('p');
+    noteEl.className = 'gap-note';
+    noteEl.textContent = '⚠ Note for reviewers: ' + sec.note;
+    bodyDiv.appendChild(noteEl);
+  }
+
+  if (sec.paragraphs && sec.paragraphs.length > 0) {
+    sec.paragraphs.forEach(txt => {
+      const p = document.createElement('p');
+      p.textContent = txt;
+      bodyDiv.appendChild(p);
+    });
+  }
+
+  if (sec.subsections) {
+    sec.subsections.forEach(sub => {
+      const sh = document.createElement('p');
+      sh.className = 'sub-heading';
+      sh.textContent = sub.heading;
+      bodyDiv.appendChild(sh);
+      sub.paragraphs.forEach(txt => {
+        const p = document.createElement('p');
+        p.textContent = txt;
+        bodyDiv.appendChild(p);
+      });
+    });
+  }
+
+  if (sec.tableData) {
+    const tbl = document.createElement('table');
+    tbl.className = 'section-table';
+    const thead = document.createElement('thead');
+    const hr = document.createElement('tr');
+    sec.tableData.headers.forEach(h => {
+      const th = document.createElement('th');
+      th.textContent = h;
+      hr.appendChild(th);
+    });
+    thead.appendChild(hr);
+    tbl.appendChild(thead);
+    const tbody = document.createElement('tbody');
+    sec.tableData.rows.forEach(cells => {
+      const tr = document.createElement('tr');
+      cells.forEach(cell => {
+        const td = document.createElement('td');
+        td.textContent = cell;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    tbl.appendChild(tbody);
+    bodyDiv.appendChild(tbl);
+  }
+
+  card.appendChild(bodyDiv);
+  card.addEventListener('click', () => activateSection(sec.id, false));
+  return card;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SECTION ACTIVATION
+   ───────────────────────────────────────────────────────────── */
+function activateSection(sectionId, scrollToIt) {
+  /* Remove previous active */
+  document.querySelectorAll('.section-card.is-active')
+    .forEach(el => el.classList.remove('is-active'));
+
+  const card = document.querySelector(`[data-sid="${sectionId}"]`);
+  if (card) card.classList.add('is-active');
+
+  /* Find section data */
+  let secData = null, artData = null;
+  for (const art of CONSTITUTION) {
+    const found = art.sections.find(s => s.id === sectionId);
+    if (found) { secData = found; artData = art; break; }
+  }
+  if (!secData) return;
+
+  /* Update panel */
+  document.getElementById('js-active-id').textContent =
+    `§ ${sectionId}  ·  ${artData.article}`;
+  document.getElementById('js-active-title').textContent = secData.title;
+
+  /* Load existing review data */
+  const rev = state.reviews[sectionId];
+  document.querySelectorAll('.verdict-btn').forEach(btn => {
+    btn.classList.remove('is-active');
+    if (rev && rev.verdict === btn.getAttribute('data-v')) btn.classList.add('is-active');
+  });
+
+  const ta = document.getElementById('js-annotation');
+  ta.value = rev ? (rev.annotation || '') : '';
+
+  const al = document.getElementById('js-autosave');
+  al.textContent = rev ? '✓ Saved' : '—';
+  al.className = 'autosave-label' + (rev ? ' is-saved' : '');
+
+  updateSubmitState();
+
+  state.activeSection = sectionId;
+  saveState();
+
+  if (scrollToIt && card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SCROLL TRACKING — IntersectionObserver
+   ───────────────────────────────────────────────────────────── */
+function setupScrollTracking() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.45) {
+        const sid = entry.target.getAttribute('data-sid');
+        if (sid && sid !== state.activeSection) activateSection(sid, false);
+      }
+    });
+  }, { threshold: 0.45 });
+
+  document.querySelectorAll('.section-card').forEach(el => observer.observe(el));
+}
+
+/* ─────────────────────────────────────────────────────────────
+   VERDICT BUTTONS
+   ───────────────────────────────────────────────────────────── */
+function setupVerdictButtons() {
+  document.querySelectorAll('.verdict-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!state.activeSection) return;
+      const v = btn.getAttribute('data-v');
+      const cur = state.reviews[state.activeSection];
+      const newV = cur && cur.verdict === v ? null : v;
+
+      document.querySelectorAll('.verdict-btn').forEach(b => b.classList.remove('is-active'));
+      if (newV) btn.classList.add('is-active');
+
+      if (!state.reviews[state.activeSection]) state.reviews[state.activeSection] = {};
+      state.reviews[state.activeSection].verdict = newV;
+      state.reviews[state.activeSection].ts = new Date().toISOString();
+
+      refreshCardVisual(state.activeSection);
+      updateSubmitState();
+      saveState();
+      renderProgress();
+      updateHeaderProgress();
+    });
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ANNOTATION AUTO-SAVE
+   ───────────────────────────────────────────────────────────── */
+let saveTimer = null;
+function setupAnnotation() {
+  const ta = document.getElementById('js-annotation');
+  ta.addEventListener('input', () => {
+    if (!state.activeSection) return;
+    const al = document.getElementById('js-autosave');
+    al.textContent = 'Saving…';
+    al.className = 'autosave-label is-saving';
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      if (!state.reviews[state.activeSection]) state.reviews[state.activeSection] = {};
+      state.reviews[state.activeSection].annotation = ta.value;
+      state.reviews[state.activeSection].ts = new Date().toISOString();
+      al.textContent = '✓ Saved';
+      al.className = 'autosave-label is-saved';
+      updateSubmitState();
+      saveState();
+    }, 750);
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────
+   WEB SPEECH API — Voice recording
+   Continuous loop, iOS Safari compatible (en-GB locale)
+   ───────────────────────────────────────────────────────────── */
+let recognition = null;
+let isRec = false;
+
+function setupRecordButton() {
+  const btn = document.getElementById('js-record-btn');
+  const SR  = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    btn.style.opacity = '0.3';
+    btn.title = 'Speech recognition not supported in this browser';
+    return;
+  }
+  btn.addEventListener('click', () => {
+    if (!state.activeSection) { showToast('Select a clause before recording'); return; }
+    isRec ? stopRecording() : startRecording();
+  });
+}
+
+function startRecording() {
+  const SR  = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.continuous     = true;
+  recognition.interimResults = true;
+  recognition.lang           = 'en-GB';
+  recognition.maxAlternatives = 1;
+
+  const ta = document.getElementById('js-annotation');
+  let baseText = ta.value;
+
+  recognition.onresult = e => {
+    let interim = '', final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal) final += t + ' ';
+      else interim += t;
+    }
+    if (final) baseText += final;
+    ta.value = baseText + interim;
+    ta.dispatchEvent(new Event('input'));
+  };
+
+  recognition.onerror = e => {
+    if (e.error === 'not-allowed') { showToast('Microphone access denied'); stopRecording(); return; }
+    if (e.error !== 'aborted' && isRec) setTimeout(() => { try { recognition.start(); } catch(_) {} }, 400);
+  };
+
+  recognition.onend = () => {
+    if (isRec) setTimeout(() => { try { recognition.start(); } catch(_) {} }, 200);
+  };
+
+  recognition.start();
+  isRec = true;
+
+  const btn = document.getElementById('js-record-btn');
+  btn.classList.add('is-recording');
+  document.getElementById('js-record-label').textContent = 'Stop Recording';
+  showToast('Recording — speak clearly. Click again to stop.');
+}
+
+function stopRecording() {
+  isRec = false;
+  if (recognition) { recognition.stop(); recognition = null; }
+  const btn = document.getElementById('js-record-btn');
+  btn.classList.remove('is-recording');
+  document.getElementById('js-record-label').textContent = 'Record Note';
+  showToast('Recording stopped');
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SUBMIT TO GAS LEDGER
+   ───────────────────────────────────────────────────────────── */
+function setupSubmitButton() {
+  document.getElementById('js-submit-btn').addEventListener('click', async () => {
+    if (!state.activeSection) return;
+    const rev = state.reviews[state.activeSection];
+    if (!rev) return;
+
+    let secTitle = '';
+    for (const art of CONSTITUTION) {
+      const f = art.sections.find(s => s.id === state.activeSection);
+      if (f) { secTitle = f.title; break; }
+    }
+
+    const payload = {
+      reviewer:    state.reviewer,
+      sessionId:   state.sessionId,
+      clauseId:    state.activeSection,
+      clauseTitle: secTitle,
+      verdict:     rev.verdict || '',
+      annotation:  rev.annotation || '',
+      timestamp:   new Date().toISOString()
+    };
+
+    const btn = document.getElementById('js-submit-btn');
+    btn.textContent = 'Submitting…';
+    btn.disabled = true;
+
+    try {
+      /* mode: no-cors is required for GAS Web Apps — response is not readable
+         but the POST is received and processed correctly by doPost(e).         */
+      await fetch(CONFIG.GAS_ENDPOINT, {
+        method:  'POST',
+        mode:    'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body:    JSON.stringify(payload)
+      });
+      showToast(`§ ${state.activeSection} submitted to ledger`);
+      btn.textContent = '✓ Submitted';
+      setTimeout(() => { btn.textContent = 'Submit to Ledger'; updateSubmitState(); }, 2200);
+    } catch (err) {
+      showToast('Network error — data saved locally');
+      btn.textContent = 'Submit to Ledger';
+      updateSubmitState();
+    }
+  });
+}
+
+function updateSubmitState() {
+  const btn = document.getElementById('js-submit-btn');
+  if (!state.activeSection) { btn.disabled = true; return; }
+  const rev = state.reviews[state.activeSection];
+  btn.disabled = !rev || (!rev.verdict && !rev.annotation);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CARD VISUAL REFRESH
+   ───────────────────────────────────────────────────────────── */
+function refreshCardVisual(sectionId) {
+  const card = document.querySelector(`[data-sid="${sectionId}"]`);
+  if (!card) return;
+  const rev = state.reviews[sectionId];
+
+  card.classList.remove('has-verdict', 'v-clear', 'v-loophole', 'v-restrictive', 'v-ambiguous');
+  const meta = card.querySelector('.section-meta');
+  const oldBadge = meta.querySelector('.verdict-badge');
+  if (oldBadge) oldBadge.remove();
+
+  if (rev && rev.verdict) {
+    card.classList.add('has-verdict', 'v-' + rev.verdict);
+    const badge = document.createElement('span');
+    badge.className = `verdict-badge vb-${rev.verdict}`;
+    badge.textContent = verdictLabel(rev.verdict);
+    meta.appendChild(badge);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PROGRESS
+   ───────────────────────────────────────────────────────────── */
+function renderProgress() {
+  const list = document.getElementById('js-progress');
+  list.innerHTML = '';
+  CONSTITUTION.forEach(art => {
+    const total    = art.sections.length;
+    const reviewed = art.sections.filter(s => state.reviews[s.id] && state.reviews[s.id].verdict).length;
+    const pct      = total > 0 ? (reviewed / total) * 100 : 0;
+    const row      = document.createElement('div');
+    row.className  = 'prog-row';
+    row.innerHTML  =
+      `<span class="prog-label">${esc(art.article.replace('Article ', 'Art. ').replace('Schedule ', 'Sch. '))}</span>` +
+      `<div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>` +
+      `<span class="prog-count">${reviewed}/${total}</span>`;
+    list.appendChild(row);
+  });
+}
+
+function updateHeaderProgress() {
+  let total = 0, done = 0;
+  CONSTITUTION.forEach(art => {
+    total += art.sections.length;
+    done  += art.sections.filter(s => state.reviews[s.id] && state.reviews[s.id].verdict).length;
+  });
+  document.getElementById('js-header-progress').textContent =
+    `${done} / ${total} clauses reviewed`;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   EXPORT
+   ───────────────────────────────────────────────────────────── */
+function exportSession() {
+  const data = {
+    exportedAt: new Date().toISOString(),
+    reviewer:   state.reviewer,
+    sessionId:  state.sessionId,
+    portal:     CONFIG.DOMAIN,
+    ref:        'SEIC-PARL-2026-001',
+    reviews:    state.reviews
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `seic-review-${state.reviewer}-${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Session exported as JSON');
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LOCAL STORAGE
+   ───────────────────────────────────────────────────────────── */
+function saveState() {
+  try {
+    const key = CONFIG.STORAGE_KEY + '_' + state.reviewer;
+    localStorage.setItem(key, JSON.stringify({
+      reviewer:      state.reviewer,
+      sessionId:     state.sessionId,
+      reviews:       state.reviews,
+      activeSection: state.activeSection
+    }));
+  } catch (_) {}
+}
+
+function loadState() {
+  try {
+    const params   = new URLSearchParams(window.location.search);
+    const reviewer = params.get('reviewer') || 'anonymous';
+    const key      = CONFIG.STORAGE_KEY + '_' + reviewer.toLowerCase().replace(/\s+/g, '-').trim();
+    const raw      = localStorage.getItem(key);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      state.reviews       = saved.reviews      || {};
+      state.activeSection = saved.activeSection || null;
+      state.sessionId     = saved.sessionId    || state.sessionId;
+    }
+  } catch (_) {}
+}
+
+/* ─────────────────────────────────────────────────────────────
+   UTILITIES
+   ───────────────────────────────────────────────────────────── */
+function genSessionId() {
+  return 'sess_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now();
+}
+
+function verdictLabel(v) {
+  return { clear: 'Clear', loophole: 'Loophole', restrictive: 'Restrictive', ambiguous: 'Ambiguous' }[v] || v;
+}
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+let toastTimer = null;
+function showToast(msg, dur = 3000) {
+  const el = document.getElementById('js-toast');
+  el.textContent = msg;
+  el.classList.add('is-visible');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('is-visible'), dur);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BOOT
+   ───────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
